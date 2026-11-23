@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mie Academy Blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* hallmark v2.0.0 · deal: manual (client-specified direction; toolkit clone blocked, sloplint not run) · genre: editorial · shape: tabbed prospectus · signature: the Mie learning arc and the grade-by-grade sample week */
+/* critique: an institutional prospectus, not a landing page; one terracotta accent; hairline rules instead of nested cards; mono kept for labels at the client's explicit request */
+/* waive 64 (mono labels): client asked for monospace labels in the brief */
+/* VOICE: calm, exact, consultative. IDEA: a printed academy blueprint with ruled sections and margin tags.
+   PICTURE: the learning arc, the sample-week strip, the layered infrastructure stack.
+   COLOUR and TYPE: alabaster, forest ink, hairlines, terracotta; Source Serif heads, Plex sans body, Plex mono labels.
+   LAYOUT: one mission screen, then tabbed pillars, grade selector, manifest table, layered stack. */
+:root{
+  color-scheme:light;
+  --paper:250 249 246; --ink:27 54 45; --slate:30 41 59; --rule:226 232 240; --clay:192 86 33; --mute:91 100 114; --wash:243 241 236; --card:255 255 255;
+  --serif:"Source Serif 4",Georgia,serif; --sans:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;min-width:0}
+html,body{overflow-x:clip}
+body{margin:0;background:rgb(var(--paper));color:rgb(var(--slate));font-family:var(--sans)}
+h1,h2,h3,h4{overflow-wrap:break-word;min-width:0}
+a:focus-visible,button:focus-visible{outline:2px solid rgb(var(--clay));outline-offset:2px;transition:none}
+.fade{animation:fade .25s ease-out}
+@keyframes fade{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.fade{animation:none}}
+.ns{max-width:760px;margin:48px auto;padding:0 20px;font:17px/1.6 var(--sans)}
+.ns h1{font:600 44px/1.05 var(--serif);color:rgb(var(--ink));margin:0 0 12px}
+</style>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+const v = n => `rgb(var(--${n}) / <alpha-value>)`;
+tailwind.config = { theme: { extend: {
+  colors: { paper:v('paper'), ink:v('ink'), slate:v('slate'), rule:v('rule'), clay:v('clay'), mute:v('mute'), wash:v('wash'), card:v('card') },
+  fontFamily: { serif:['var(--serif)'], sans:['var(--sans)'], mono:['var(--mono)'] }
+}}};
+</script>
+</head>
+<body>
+<div id="root"><noscript><div class="ns"><h1>Mie Academy</h1><p>Building the next generation of critical thinkers: students grounded in truth, confidence, integrity, cultural awareness, and the ability to think independently.</p><p>Through Unapologetic — Redefine Standards, we create educational systems and literacy experiences designed to help students understand themselves, analyze patterns in history, and develop solutions for the future.</p><p>Turn on JavaScript to explore the interactive Grades 9–12 blueprint.</p></div></noscript></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/htm@3.1.1/dist/htm.umd.js"></script>
+<script>
+{
+const { useState, useEffect } = React;
+const html = htm.bind(React.createElement);
+
+const FOUNDER = 'Founded by Christina Aku-Na Uba, M.Ed., special education teacher, founder of Meadows Productions LLC, and author of Unapologetic — Redefine Standards: A Literacy Philosophy for Building Thinkers, Not Just Readers.';
+const PHASES = [['Roots','Newborn to K'],['Explorers','Grades 1–5'],['Innovators','Grades 5–8'],['Solutions','High school and beyond']];
+
+const TRAITS = ['Truth','Confidence','Integrity','Cultural awareness','Independent thought'];
+const ARC = [
+  ['Understand yourself','Identity, voice and personal story through reading and writing.'],
+  ['Analyze patterns in history','Read primary sources, trace cause and effect, see what repeats.'],
+  ['Design solutions for the future','Turn analysis into projects that serve a real community.']
+];
+
+const PILLARS = [
+  { name:'Group Economics', line:'Students learn to pool resources, own assets together and keep capital circulating in their community.', marks:['Cooperative models','Community capital','Shared ownership'] },
+  { name:'Practical Problem-Solving', line:'Every grade ends with a real deliverable for a real audience, not a test.', marks:['Grade-level capstones','Community work','Portfolio evidence'] },
+  { name:'Hybrid Learning', line:'In-person lab days paired with self-paced study and supervised fieldwork.', marks:['Synchronous labs','Asynchronous modules','Fieldwork'] }
+];
+
+const T = { sync:['Lab','bg-ink text-paper'], async:['Async','bg-card text-slate'], field:['Field','bg-wash text-ink'], mentor:['Mentor','bg-card text-clay'] };
+
+const GRADES = {
+  9:{ stage:'Foundations', tagline:'Know your story, know your money.',
+      week:[['Mon','async','Self-paced modules'],['Tue','sync','In-person lab'],['Wed','async','Reading and writing'],['Thu','sync','In-person lab'],['Fri','field','Community fieldwork']],
+      note:'2 synchronous lab days and 3 asynchronous or fieldwork days',
+      lens:'Identity and voice: memoir, family history, the student as author.',
+      econ:['Financial Literacy & Cooperative Models',['Budgeting, banking and credit fundamentals','How co-ops, credit unions and savings circles work','Class investment club with a simulated portfolio']],
+      cap:['Neighborhood Needs Audit','Teams survey local households and businesses to identify three solvable community problems.',['Survey instrument and dataset','Two-page findings brief','Presentation to families']],
+      skills:['Data collection','Spreadsheet modeling','Public speaking'] },
+  10:{ stage:'Systems', tagline:'Pool resources, share the upside.',
+      week:[['Mon','sync','In-person lab'],['Tue','async','Self-paced modules'],['Wed','sync','In-person lab'],['Thu','field','Co-op operations'],['Fri','async','Ledger and reflection']],
+      note:'2 synchronous lab days and 3 asynchronous or fieldwork days',
+      lens:'Patterns in history: how communities have built and protected shared wealth.',
+      econ:['Collective Purchasing & Community Banking',['Cooperative buying and supplier negotiation','Community lending, interest and risk','Governance: bylaws, voting and roles']],
+      cap:['Student Purchasing Co-op Pilot','Students run a real bulk-buy cooperative for one term and report savings back to members.',['Co-op bylaws','Ledger and reconciliation','Member savings report']],
+      skills:['Negotiation','Bookkeeping','Group governance'] },
+  11:{ stage:'Design', tagline:'Solve a real problem for a real business.',
+      week:[['Mon','field','Client site work'],['Tue','sync','In-person lab'],['Wed','field','Apprenticeship'],['Thu','sync','In-person lab'],['Fri','async','Build and document']],
+      note:'2 lab days, 2 fieldwork or apprenticeship days and 1 asynchronous day',
+      lens:'Argument and evidence: research writing that informs a client recommendation.',
+      econ:['Business Ownership & Local Supply Chains',['Map local supply chains and dollar circulation','Ownership structures: LLC, co-op, partnership','Pricing, margin and unit economics']],
+      cap:['Local Business Solutions Sprint','Student teams consult for a local business and implement a process or technology fix.',['Client agreement and problem statement','Working solution (tracker, site, automation)','Before-and-after impact memo']],
+      skills:['Client communication','Project management','Applied technology'] },
+  12:{ stage:'Launch', tagline:'Build something the community owns.',
+      week:[['Mon','sync','Venture studio'],['Tue','mentor','Mentor session'],['Wed','async','Venture build'],['Thu','field','Market testing'],['Fri','async','Venture build']],
+      note:'1 studio day, 1 mentor day and 3 venture-build or market days',
+      lens:'Vision for the future: a published thesis on the problem the venture solves.',
+      econ:['Venture Launch & Community Capital',['Business plan, pitch and financial model','Community investment, crowdfunding, micro-grants','Shared-ownership and reinvestment plans']],
+      cap:['Venture Launch & Demo Day','Students launch a student-led enterprise and pitch to a community investment panel.',['Operating venture or pilot','Financial model and ownership table','Demo-day pitch and investor Q&A']],
+      skills:['Leadership','Fundraising','Execution'] }
+};
+
+const KIT = [
+  { item:'Managed laptop', spec:'14" display, 8–16 GB RAM, 256 GB SSD, webcam', purpose:'Primary learning device, enrolled in MDM before it ships', scope:'enroll' },
+  { item:'Connectivity bridge', spec:'5G / LTE mobile hotspot with a filtered data plan', purpose:'Guarantees access on asynchronous and field days', scope:'enroll' },
+  { item:'Sandbox software suite', spec:'LMS app, office suite, coding sandbox, finance simulator, digital library', purpose:'Licensed, pre-approved tools provisioned through single sign-on', scope:'enroll' },
+  { item:'Hardware lab kit', spec:'Microcontroller, sensors, breadboard, multimeter, cables', purpose:'Hands-on builds for lab days and capstones', scope:'enroll' },
+  { item:'Accessory pack', spec:'Headset with mic, protective case, USB-C hub', purpose:'Clear audio in live sessions; device protection', scope:'enroll' },
+  { item:'Venture toolkit', spec:'Card reader, design software seat, shared cloud drive', purpose:'Supports Grade 11 client work and Grade 12 ventures', scope:'addon' }
+];
+const LIFECYCLE = ['Enroll','Provision and ship','Family onboarding','Help desk and repair','Return or refresh'];
+
+const LAYERS = [
+  { name:'Governance & policy', sum:'Rules families can read on one page.', pts:['FERPA-aligned student records','Data-sharing agreements with every vendor','Acceptable-use policy signed by student and parent','Annual policy and access review'] },
+  { name:'Safety & cybersecurity', sum:'Protection that follows the device off-site.', pts:['Content filtering on and off network','Endpoint protection and automatic patching','Cloud backup of student work','Written incident-response plan'] },
+  { name:'Learning platform (LMS)', sum:'One home for coursework, grades and fieldwork logs.', pts:['Course shells per grade and cohort','Gradebook with transcript export','Parent portal with progress view','Fieldwork and capstone portfolio'], opts:['Canvas','Google Classroom','Schoology'] },
+  { name:'Identity & access', sum:'One sign-in per student, scoped by role.', pts:['Single sign-on into every approved app','Student, parent, staff and mentor roles','Multi-factor sign-in for staff','Same-day account removal on exit'] },
+  { name:'Device management (MDM)', sum:'Every device configured before it reaches the family.', pts:['Zero-touch enrollment','App allow-list and update policy','Remote lock, locate and wipe','Asset inventory tied to each student'], opts:['Google Admin','Microsoft Intune','Jamf'] },
+  { name:'Student endpoint', sum:'What sits on the kitchen table.', pts:['Managed laptop','Connectivity bridge','Hardware lab kit'] }
+];
+
+const Tag = ({children}) => html`<span className="inline-flex items-center border border-dashed border-clay/60 text-clay font-mono text-[12px] px-2 py-0.5 rounded-sm whitespace-nowrap">${children}</span>`;
+const Label = ({children}) => html`<div className="font-mono text-[12px] text-mute mb-2">${children}</div>`;
+const Badge = ({tone, children}) => {
+  const c = tone==='clay' ? 'border-clay text-clay' : tone==='ink' ? 'border-ink bg-ink text-paper' : 'border-rule text-mute bg-paper';
+  return html`<span className=${'inline-block border rounded-sm font-mono text-[12px] px-1.5 py-0.5 whitespace-nowrap '+c}>${children}</span>`;
+};
+const SectionHead = ({title, sub}) => html`
+  <div className="flex flex-wrap items-end justify-between gap-3 border-b border-rule pb-3 mb-5">
+    <div><h2 className="font-serif text-[30px] leading-tight text-ink">${title}</h2>
+      ${sub && html`<p className="text-mute text-[15.5px] mt-1 max-w-2xl">${sub}</p>`}</div>
+    <${Tag}>Template framework — client preview<//>
+  </div>`;
+
+function Philosophy(){
+  return html`<div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)] border border-rule bg-card/60">
+    <div className="p-5 border-b lg:border-b-0 lg:border-r border-rule">
+      <h3 className="font-serif text-[22px] text-ink leading-snug">Unapologetic — Redefine Standards</h3>
+      <p className="text-[15px] mt-2">Thinkers, not just readers. Literacy that is fun, applicable and unapologetic, with history and original storytelling in every lesson.</p>
+      <div className="font-mono text-[12px] text-mute mt-4 mb-2">Mie Academy is the Solutions phase</div>
+      <ol className="grid grid-cols-4 border border-rule text-[13px]">
+        ${PHASES.map(([p,a],i)=>html`<li key=${p} className=${'px-2 py-2 '+(i?'border-l border-rule ':'')+(p==='Solutions'?'bg-ink text-paper':'text-mute')}>
+          <div className=${'font-medium '+(p==='Solutions'?'':'text-slate')}>${p}</div><div className="leading-tight mt-0.5">${a}</div></li>`)}
+      </ol>
+      <div className="font-mono text-[12px] text-mute mt-4 mb-2">The Mie graduate is grounded in</div>
+      <div className="flex flex-wrap gap-1.5">${TRAITS.map(t=>html`<span key=${t} className="border border-ink text-ink px-2 py-1 text-[14px]">${t}</span>`)}</div>
+    </div>
+    <ol className="grid sm:grid-cols-3">
+      ${ARC.map(([h,d],i)=>html`<li key=${h} className=${'p-5 '+(i?'border-t sm:border-t-0 sm:border-l border-rule':'')}>
+        <div className="font-serif text-[40px] leading-none text-clay">${i+1}</div>
+        <h4 className="font-serif text-[19px] text-ink mt-3 leading-snug">${h}</h4>
+        <p className="text-[14.5px] text-mute mt-1.5">${d}</p>
+      </li>`)}
+    </ol>
+  </div>`;
+}
+
+function Pillars(){
+  return html`<div className="grid md:grid-cols-3 border border-rule bg-card/60">
+    ${PILLARS.map((p,i)=>html`<div key=${p.name} className=${'p-5 '+(i? 'border-t md:border-t-0 md:border-l border-rule':'')}>
+      <div className="font-mono text-[12px] text-mute mb-2">Pillar ${['I','II','III'][i]}</div>
+      <h3 className="font-serif text-[20px] text-ink mb-1.5">${p.name}</h3>
+      <p className="text-[15px] leading-relaxed mb-3">${p.line}</p>
+      <div className="flex flex-wrap gap-1.5">${p.marks.map(m=>html`<${Badge} key=${m}>${m}<//>`)}</div>
+    </div>`)}
+  </div>`;
+}
+
+function GradeExplorer(){
+  const [g,setG] = useState(9);
+  const keys=[9,10,11,12];
+  useEffect(()=>{
+    const on=e=>{ if(e.target.closest('input,textarea'))return;
+      if(e.key==='ArrowRight') setG(x=>keys[Math.min(keys.indexOf(x)+1,3)]);
+      if(e.key==='ArrowLeft') setG(x=>keys[Math.max(keys.indexOf(x)-1,0)]); };
+    window.addEventListener('keydown',on); return ()=>window.removeEventListener('keydown',on);
+  },[]);
+  const d = GRADES[g];
+  return html`<div className="border border-rule bg-card/60">
+    <div className="grid grid-cols-4 border-b border-rule" role="tablist" aria-label="Grade level">
+      ${keys.map((k,i)=>html`<button key=${k} role="tab" aria-selected=${g===k} onClick=${()=>setG(k)}
+        className=${'min-h-[64px] px-3 py-3 text-left transition-colors '+(i?'border-l border-rule ':'')+(g===k?'bg-ink text-paper':'hover:bg-wash')}>
+        <div className="font-serif text-[20px] leading-none">${k}th grade</div>
+        <div className=${'font-mono text-[12px] mt-1 '+(g===k?'text-paper/75':'text-mute')}>${GRADES[k].stage}</div>
+      </button>`)}
+    </div>
+    <div key=${g} className="fade">
+      <div className="px-5 pt-5 flex flex-wrap items-baseline justify-between gap-2">
+        <p className="font-serif text-[22px] text-ink">${d.stage}: ${d.tagline}</p>
+        <span className="text-[13px] text-mute">Arrow keys switch grade</span>
+      </div>
+      <div className="px-5 pt-4">
+        <${Label}>Hybrid cadence, sample week<//>
+        <div className="grid grid-cols-5 border border-rule">
+          ${d.week.map(([day,t,what],i)=>html`<div key=${day} className=${'px-2.5 py-3 '+(i?'border-l border-rule ':'')+T[t][1]}>
+            <div className="flex justify-between items-center gap-1"><span className="font-mono text-[12px] opacity-80">${day}</span><span className="font-mono text-[12px] opacity-80 hidden sm:inline">${T[t][0]}</span></div>
+            <div className="text-[14px] leading-snug mt-1.5 font-medium">${what}</div>
+          </div>`)}
+        </div>
+        <p className="text-[14px] text-mute mt-2">${d.note}.</p>
+      </div>
+      <div className="grid md:grid-cols-3 mt-5 border-t border-rule">
+        <div className="p-5">
+          <${Label}>Unapologetic literacy lens<//>
+          <p className="text-[15px] text-ink">${d.lens}</p>
+        </div>
+        <div className="p-5 border-t md:border-t-0 md:border-l border-rule">
+          <${Label}>Group economics focus<//>
+          <h4 className="font-serif text-[18px] text-ink mb-2">${d.econ[0]}</h4>
+          <ul className="space-y-1.5">${d.econ[1].map(x=>html`<li key=${x} className="flex gap-2 text-[14.5px]"><span className="text-clay">—</span><span>${x}</span></li>`)}</ul>
+        </div>
+        <div className="p-5 border-t md:border-t-0 md:border-l border-rule">
+          <div className="flex justify-between items-start gap-2"><${Label}>Problem-solving capstone<//><${Badge} tone="clay">Deliverables<//></div>
+          <h4 className="font-serif text-[18px] text-ink mb-1">${d.cap[0]}</h4>
+          <p className="text-[14px] text-mute mb-2.5">${d.cap[1]}</p>
+          <ul className="space-y-1">${d.cap[2].map((x,i)=>html`<li key=${x} className="flex gap-2 text-[14.5px]"><span className="font-mono text-[12px] text-clay pt-0.5">D${i+1}</span><span>${x}</span></li>`)}</ul>
+        </div>
+      </div>
+    </div>
+    <div className="border-t border-rule px-5 py-3 flex flex-wrap gap-x-4 gap-y-2 items-center text-[14px]">
+      <span className="font-mono text-[12px] text-mute">Competencies</span>
+      ${d.skills.map(s=>html`<${Badge} key=${s}>${s}<//>`)}
+    </div>
+  </div>`;
+}
+
+function TechKit(){
+  const [f,setF] = useState('all');
+  const rows = KIT.filter(r=>f==='all'||r.scope===f);
+  const btn=(k,l)=>html`<button key=${k} onClick=${()=>setF(k)} aria-pressed=${f===k} className=${'min-h-[40px] px-3 text-[14px] border transition-colors '+(f===k?'border-ink bg-ink text-paper':'border-rule bg-paper hover:bg-wash')}>${l}</button>`;
+  return html`<div className="border border-rule bg-card/60">
+    <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-3 border-b border-rule">
+      <h3 className="font-serif text-[20px] text-ink">Enrollment tech kit manifest</h3>
+      <div className="flex -space-x-px">${btn('all','All items')}${btn('enroll','Ships at enrollment')}${btn('addon','Grade add-ons')}</div>
+    </div>
+    <div className="overflow-x-auto">
+    <table className="w-full text-left text-[14.5px]">
+      <thead><tr className="text-[13px] text-mute border-b border-rule">
+        <th className="px-5 py-2 font-normal w-8">No.</th><th className="py-2 font-normal">Item</th><th className="py-2 font-normal">Specification (editable)</th><th className="py-2 font-normal">Purpose</th><th className="px-5 py-2 font-normal">Status</th></tr></thead>
+      <tbody>${rows.map(r=>html`<tr key=${r.item} className="border-b border-rule last:border-0 align-top">
+        <td className="px-5 py-3 font-mono text-[12px] text-mute">${String(KIT.indexOf(r)+1).padStart(2,'0')}</td>
+        <td className="py-3 pr-4 font-medium text-ink whitespace-nowrap">${r.item}</td>
+        <td className="py-3 pr-4 min-w-[220px]">${r.spec}</td>
+        <td className="py-3 pr-4 text-mute min-w-[200px]">${r.purpose}</td>
+        <td className="px-5 py-3">${r.scope==='enroll'?html`<${Badge} tone="ink">Standard<//>`:html`<${Badge} tone="clay">Grade 11+<//>`}</td>
+      </tr>`)}</tbody>
+    </table></div>
+    <div className="border-t border-rule px-5 py-3">
+      <div className="font-mono text-[12px] text-mute mb-2">Device lifecycle</div>
+      <ol className="flex flex-wrap gap-1.5 text-[14px]">
+        ${LIFECYCLE.map((s,i)=>html`<li key=${s} className="border border-rule bg-paper px-2 py-1"><span className="font-mono text-[12px] text-clay mr-1.5">${i+1}</span>${s}</li>`)}
+      </ol>
+    </div>
+  </div>`;
+}
+
+function Infra(){
+  const [i,setI] = useState(4);
+  const L = LAYERS[i];
+  return html`<div className="grid lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] border border-rule bg-card/60">
+    <div className="p-5">
+      <${Label}>Infrastructure and governance stack: select a layer<//>
+      <div className="space-y-1.5">
+        ${LAYERS.map((l,k)=>html`<button key=${l.name} onClick=${()=>setI(k)} aria-pressed=${i===k}
+          style=${{marginInline:(k*1.2)+'%', width:'calc(100% - '+(k*2.4)+'%)'}}
+          className=${'block text-left border px-4 min-h-[48px] py-2.5 transition-colors '+(i===k?'border-ink bg-ink text-paper':'border-rule bg-paper hover:bg-wash')}>
+          <span className="flex justify-between items-center gap-3">
+            <span className="font-medium text-[15px]">${l.name}</span>
+            <span className=${'font-mono text-[12px] '+(i===k?'text-paper/70':'text-mute')}>L${LAYERS.length-k}</span>
+          </span>
+        </button>`)}
+      </div>
+      <p className="text-[13.5px] text-mute mt-3">Read bottom-up: the device in the home, then the controls wrapped around it.</p>
+    </div>
+    <div key=${i} className="fade p-5 border-t lg:border-t-0 lg:border-l border-rule bg-paper">
+      <div className="font-mono text-[12px] text-clay mb-1">Layer ${LAYERS.length-i}</div>
+      <h4 className="font-serif text-[22px] text-ink mb-1">${L.name}</h4>
+      <p className="text-[15px] text-mute mb-4">${L.sum}</p>
+      <ul className="divide-y divide-rule border-y border-rule">
+        ${L.pts.map(p=>html`<li key=${p} className="py-2.5 text-[15px]">${p}</li>`)}
+      </ul>
+      ${L.opts && html`<div className="mt-4"><${Label}>Platform options, selected in consultation<//><div className="flex flex-wrap gap-1.5">${L.opts.map(o=>html`<${Badge} key=${o}>${o}<//>`)}</div></div>`}
+    </div>
+  </div>`;
+}
+
+function App(){
+  const views=[['vision','Academy vision and progression'],['tech','Technology and IT infrastructure'],['full','Executive blueprint, both pillars']];
+  const init = (()=>{ const h=location.hash.slice(1); return views.some(v=>v[0]===h)?h:'vision'; })();
+  const [v,setV]=useState(init);
+  useEffect(()=>{ try{ history.replaceState(null,'','#'+v);}catch(e){} },[v]);
+  const vision = html`<section key="v" className="fade">
+    <${SectionHead} title="Academy vision and Grade 9–12 progression" sub="Three program pillars, carried through four grade levels, each ending in a concrete community deliverable."/>
+    <div className="space-y-5"><${Philosophy}/><${Pillars}/><${GradeExplorer}/></div></section>`;
+  const tech = html`<section key="t" className="fade">
+    <${SectionHead} title="Technology and IT infrastructure" sub="One standard kit per student, managed centrally, so families never configure anything themselves."/>
+    <div className="space-y-5"><${TechKit}/><${Infra}/></div></section>`;
+  return html`<div className="max-w-[1200px] mx-auto px-4 sm:px-8 py-8">
+    <header className="border-b-2 border-ink pb-6 mb-6">
+      <div className="flex justify-end mb-3"><${Tag}>Template framework — client preview<//></div>
+      <h1 className="font-serif text-[44px] sm:text-[64px] leading-[1.0] text-ink" style=${{textWrap:'balance'}}>Mie Academy</h1>
+      <p className="text-[15px] text-clay font-medium mt-2">A hybrid Grades 9–12 homeschool academy</p>
+      <p className="font-serif text-[21px] sm:text-[24px] leading-snug text-ink mt-4 max-w-[46rem]" style=${{textWrap:'pretty'}}>Building the next generation of critical thinkers: students grounded in truth, confidence, integrity, cultural awareness, and the ability to think independently.</p>
+      ${FOUNDER && html`<p className="text-[14.5px] text-mute mt-4">${FOUNDER}</p>`}
+    </header>
+    <nav className="flex flex-wrap border border-rule mb-8 bg-card/60" role="tablist" aria-label="Blueprint views">
+      ${views.map(([k,l],n)=>html`<button key=${k} role="tab" aria-selected=${v===k} onClick=${()=>setV(k)}
+        className=${'flex-1 min-w-[200px] min-h-[52px] px-4 text-[15px] text-left sm:text-center transition-colors '+(n?'border-l border-rule ':'')+(v===k?'bg-ink text-paper':'hover:bg-wash text-slate')}>${l}</button>`)}
+    </nav>
+    ${v==='vision' && vision}
+    ${v==='tech' && tech}
+    ${v==='full' && html`<div className="space-y-12">${vision}${tech}</div>`}
+    <footer className="mt-10 pt-4 border-t border-rule flex flex-wrap justify-between gap-2 text-[13.5px] text-mute">
+      <span>Prepared for consultation by Stealth Tech Services. Sample program content throughout; every grade, item and layer is editable.</span>
+      <span>Framework only, not a final program of study.</span>
+    </footer>
+  </div>`;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(html`<${App}/>`);
+}
+</script>
+</body>
+</html>
